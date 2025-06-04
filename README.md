@@ -1,19 +1,29 @@
-# FIAP Tech Challenge - Banco de Dados Terraform
+# FIAP Tech Challenge - Database Infrastructure
 
-This repository contains Terraform configuration files for managing cloud infrastructure for the FIAP Tech Challenge database project.
+Este repositório contém a infraestrutura do banco de dados PostgreSQL (RDS) para o projeto FIAP Tech Challenge.
 
-## Structure
+## Recursos Criados
 
-- `main.tf`: Main Terraform configuration
-- `variables.tf`: Input variables
-- `outputs.tf`: Output values
-- `versions.tf`: Provider and Terraform version constraints
-- `.github/workflows/terraform.yml`: GitHub Actions workflow for Terraform CI/CD
+- **RDS PostgreSQL 15.8**: Instância gerenciada compatível com a aplicação NestJS
+- **VPC e Subnets**: Rede isolada para segurança
+- **Security Groups**: Controle de acesso restrito à VPC
 
-## Usage
+## Como usar
 
-1. Install [Terraform](https://www.terraform.io/downloads.html)
-2. Configure your cloud provider credentials
-3. Run `terraform init`
-4. Run `terraform plan`
-5. Run `terraform apply`
+1. Configure os secrets no GitHub:
+   - `AWS_ACCESS_KEY_ID`
+   - `AWS_SECRET_ACCESS_KEY` 
+   - `DB_PASSWORD`
+
+2. O pipeline será executado automaticamente no push para main
+
+3. Use o output `database_url` na variável `DATABASE_URL` da aplicação
+
+## Schema do Banco
+
+O banco criado é compatível com o schema Prisma existente:
+- Customer (id, email, cpf, name, timestamps)
+- Category (id, name)
+- Product (id, name, ingredients[], categoryId, price, timestamps)
+- Order (id, customerId?, total, status, timestamps)
+- OrderProduct (relacionamento many-to-many)
